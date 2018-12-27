@@ -1,16 +1,18 @@
 package de.debuglevel.barcode.rest
 
+import com.google.gson.Gson
+import de.debuglevel.barcode.domain.barcode.CodeType
+import de.debuglevel.barcode.rest.greeting.BarcodeDTO
+import mu.KotlinLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import spark.Spark.awaitInitialization
-import java.util.stream.Stream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RestEndpointTests {
+    private val logger = KotlinLogging.logger {}
 
     init {
         val restEndpoint = RestEndpoint()
@@ -33,184 +35,142 @@ class RestEndpointTests {
 
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    inner class `valid requests on greet` {
+    inner class `valid requests on barcode` {
         @Test
-        fun `server lists greetings`() {
+        fun `server lists barcodes`() {
             // Arrange
+            ApiTestUtils.request("POST", "/barcodes/", Gson().toJson(BarcodeDTO(null, "Content1", CodeType.Code128)))
+            ApiTestUtils.request("POST", "/barcodes/", Gson().toJson(BarcodeDTO(null, "Content2", CodeType.QrCode)))
 
             // Act
-            val response = ApiTestUtils.request("GET", "/greetings/", null)
+            val response = ApiTestUtils.request("GET", "/barcodes/", null)
 
             // Assert
-            assertThat(response?.body).contains("Mozart")
-            assertThat(response?.body).contains("Beethoven")
-            assertThat(response?.body).contains("Haydn")
+            assertThat(response?.body).contains(CodeType.Code128.toString())
+            assertThat(response?.body).contains(CodeType.QrCode.toString())
+            assertThat(response?.body).contains("Content1")
+            assertThat(response?.body).contains("Content2")
         }
 
-        @ParameterizedTest
-        @MethodSource("validNameProvider")
-        fun `server sends greeting in body`(testData: NameTestData) {
+        @Test
+        fun `server sends uuid for new barcode`() {
             // Arrange
 
             // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+            val response = ApiTestUtils.request("POST", "/barcodes/", Gson().toJson(BarcodeDTO(null, "Content1", CodeType.Code128)))
 
             // Assert
-            assertThat(response?.body).contains(testData.expected)
+            val barcode = Gson().fromJson(response?.body, BarcodeDTO::class.java)
+            assertThat(barcode.uuid).isNotBlank()
         }
 
-        @ParameterizedTest
-        @MethodSource("validNameProvider")
-        fun `server sends correct greeting on api version 2 and default`(testData: NameTestData) {
+        @Test
+        fun `server sends status code 200`() {
             // Arrange
 
             // Act
-            val responseApiDefault = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
-            val responseApiV2 = ApiTestUtils.request("GET", "/v2/greetings/${testData.value}", null)
-
-            // Assert
-            assertThat(responseApiDefault?.body).contains(testData.expected)
-            assertThat(responseApiV2?.body).contains(testData.expected)
-        }
-
-        @ParameterizedTest
-        @MethodSource("validNameProviderApiV1")
-        fun `server sends correct greeting on api version 1`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val responseApiV1 = ApiTestUtils.request("GET", "/v1/greetings/${testData.value}", null)
-
-            // Assert
-            assertThat(responseApiV1?.body).contains(testData.expected)
-        }
-
-        @ParameterizedTest
-        @MethodSource("validNameProvider")
-        fun `server sends status code 200`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+            val response = ApiTestUtils.request("POST", "/barcodes/", Gson().toJson(BarcodeDTO(null, "Content1", CodeType.Code128)))
 
             // Assert
             assertThat(response?.status).isEqualTo(200)
         }
 
-        @ParameterizedTest
-        @MethodSource("validNameProvider")
-        fun `server sends json content type`(testData: NameTestData) {
+        @Test
+        fun `server sends json content type`() {
             // Arrange
 
             // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+            val response = ApiTestUtils.request("POST", "/barcodes/", Gson().toJson(BarcodeDTO(null, "Content1", CodeType.Code128)))
 
             // Assert
             assertThat(response?.contentType).isEqualTo("application/json")
         }
 
-        @ParameterizedTest
-        @MethodSource("validNameProvider")
-        fun `server sends json content`(testData: NameTestData) {
+        @Test
+        fun `server sends json content`() {
             // Arrange
 
             // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+            val response = ApiTestUtils.request("POST", "/barcodes/", Gson().toJson(BarcodeDTO(null, "Content1", CodeType.Code128)))
 
             // Assert
             val validJson = JsonUtils.isJSONValid(response?.body)
             assertThat(validJson).isTrue()
         }
-
-        fun validNameProvider() = Stream.of(
-                NameTestData(value = "Mozart", expected = "Hello, Mozart!"),
-                NameTestData(value = "Amadeus", expected = "Hello, Amadeus!"),
-                // TODO: Umlauts do not work when executed as gradle task in Windows
-//                NameTestData(value = "H%C3%A4nschen", expected = "Hello, Hänschen!"),
-                NameTestData(value = "Max%20Mustermann", expected = "Hello, Max Mustermann!")
-        )
-
-        fun validNameProviderApiV1() = Stream.of(
-                NameTestData(value = "Mozart", expected = "Hello from API v1, Mozart!"),
-                NameTestData(value = "Amadeus", expected = "Hello from API v1, Amadeus!"),
-                // TODO: Umlauts do not work when executed as gradle task in Windows
-//                NameTestData(value = "H%C3%A4nschen", expected = "Hello, Hänschen!"),
-                NameTestData(value = "Max%20Mustermann", expected = "Hello from API v1, Max Mustermann!")
-        )
     }
 
-    @Nested
-    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    inner class `invalid requests on greet` {
-        @ParameterizedTest
-        @MethodSource("invalidNameProvider")
-        fun `server does not send greeting in body`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
-
-            // Assert
-            assertThat(response?.body).doesNotContain("Hello, ${testData.value}!")
-        }
-
-        @ParameterizedTest
-        @MethodSource("invalidNameProvider")
-        fun `server sends error message`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
-
-            // Assert
-            assertThat(response?.body).contains("message")
-        }
-
-        @ParameterizedTest
-        @MethodSource("invalidNameProvider")
-        fun `server sends status code 400`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
-
-            // Assert
-            assertThat(response?.status).isEqualTo(400)
-        }
-
-        @ParameterizedTest
-        @MethodSource("invalidNameProvider")
-        fun `server sends json content type`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
-
-            // Assert
-            assertThat(response?.contentType).isEqualTo("application/json")
-        }
-
-        @ParameterizedTest
-        @MethodSource("invalidNameProvider")
-        fun `server sends json content`(testData: NameTestData) {
-            // Arrange
-
-            // Act
-            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
-
-            // Assert
-            val validJson = JsonUtils.isJSONValid(response?.body)
-            assertThat(validJson).isTrue()
-        }
-
-        fun invalidNameProvider() = Stream.of(
-                //NameTestData(value = ""),
-                NameTestData(value = "%20")
-        )
-    }
-
-    data class NameTestData(
-            val value: String,
-            val expected: String? = null
-    )
+//    @Nested
+//    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//    inner class `invalid requests on greet` {
+//        @ParameterizedTest
+//        @MethodSource("invalidNameProvider")
+//        fun `server does not send greeting in body`(testData: NameTestData) {
+//            // Arrange
+//
+//            // Act
+//            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+//
+//            // Assert
+//            assertThat(response?.body).doesNotContain("Hello, ${testData.value}!")
+//        }
+//
+//        @ParameterizedTest
+//        @MethodSource("invalidNameProvider")
+//        fun `server sends error message`(testData: NameTestData) {
+//            // Arrange
+//
+//            // Act
+//            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+//
+//            // Assert
+//            assertThat(response?.body).contains("message")
+//        }
+//
+//        @ParameterizedTest
+//        @MethodSource("invalidNameProvider")
+//        fun `server sends status code 400`(testData: NameTestData) {
+//            // Arrange
+//
+//            // Act
+//            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+//
+//            // Assert
+//            assertThat(response?.status).isEqualTo(400)
+//        }
+//
+//        @ParameterizedTest
+//        @MethodSource("invalidNameProvider")
+//        fun `server sends json content type`(testData: NameTestData) {
+//            // Arrange
+//
+//            // Act
+//            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+//
+//            // Assert
+//            assertThat(response?.contentType).isEqualTo("application/json")
+//        }
+//
+//        @ParameterizedTest
+//        @MethodSource("invalidNameProvider")
+//        fun `server sends json content`(testData: NameTestData) {
+//            // Arrange
+//
+//            // Act
+//            val response = ApiTestUtils.request("GET", "/greetings/${testData.value}", null)
+//
+//            // Assert
+//            val validJson = JsonUtils.isJSONValid(response?.body)
+//            assertThat(validJson).isTrue()
+//        }
+//
+//        fun invalidNameProvider() = Stream.of(
+//                //NameTestData(value = ""),
+//                NameTestData(value = "%20")
+//        )
+//    }
+//
+//    data class NameTestData(
+//            val value: String,
+//            val expected: String? = null
+//    )
 }

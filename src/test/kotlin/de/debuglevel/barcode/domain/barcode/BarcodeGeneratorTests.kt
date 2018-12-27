@@ -1,7 +1,7 @@
 package de.debuglevel.barcode.domain.barcode
 
+import de.debuglevel.barcode.rest.greeting.BarcodeDTO
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -11,42 +11,42 @@ import java.util.stream.Stream
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BarcodeGeneratorTests {
     @ParameterizedTest
-    @MethodSource("validNameProvider")
-    fun `greet valid names`(testData: NameTestData) {
+    @MethodSource("validContentProvider")
+    fun `generate valid barcodes`(testData: ContentTestData) {
         // Arrange
 
         // Act
-        val greeting = BarcodeGenerator.greet(testData.value).greeting
+        val barcodeByteArray = BarcodeGenerator.generate(BarcodeDTO(null, testData.value, CodeType.Code128), OutputFormat.SVG)
 
         //Assert
-        assertThat(greeting).isEqualTo(testData.expected)
+        assertThat(barcodeByteArray).isNotEmpty()
+        assertThat(barcodeByteArray).isNotNull()
     }
 
-    fun validNameProvider() = Stream.of(
-            NameTestData(value = "Mozart", expected = "Hello, Mozart!"),
-            NameTestData(value = "Amadeus", expected = "Hello, Amadeus!"),
-            NameTestData(value = "Hänschen", expected = "Hello, Hänschen!"),
-            NameTestData(value = "Max Mustermann", expected = "Hello, Max Mustermann!")
+    fun validContentProvider() = Stream.of(
+            ContentTestData(value = "Mozart"),
+            ContentTestData(value = "Amadeus"),
+            ContentTestData(value = "Hänschen"),
+            ContentTestData(value = "Max Mustermann")
     )
 
-    @ParameterizedTest
-    @MethodSource("invalidNameProvider")
-    fun `format invalid names`(testData: NameTestData) {
-        // Arrange
+//    @ParameterizedTest
+//    @MethodSource("invalidNameProvider")
+//    fun `format invalid names`(testData: NameTestData) {
+//        // Arrange
+//
+//        // Act
+//
+//        // Assert
+//        assertThatExceptionOfType(BarcodeGenerator.GreetingException::class.java).isThrownBy({ BarcodeGenerator.greet(testData.value) })
+//    }
 
-        // Act
+//    fun invalidNameProvider() = Stream.of(
+//            NameTestData(value = ""),
+//            NameTestData(value = " ")
+//    )
 
-        // Assert
-        assertThatExceptionOfType(BarcodeGenerator.GreetingException::class.java).isThrownBy({ BarcodeGenerator.greet(testData.value) })
-    }
-
-    fun invalidNameProvider() = Stream.of(
-            NameTestData(value = ""),
-            NameTestData(value = " ")
-    )
-
-    data class NameTestData(
-            val value: String,
-            val expected: String? = null
+    data class ContentTestData(
+            val value: String
     )
 }
