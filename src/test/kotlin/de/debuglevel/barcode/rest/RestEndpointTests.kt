@@ -2,7 +2,7 @@ package de.debuglevel.barcode.rest
 
 import com.google.gson.Gson
 import de.debuglevel.barcode.domain.barcode.CodeType
-import de.debuglevel.barcode.rest.greeting.BarcodeDTO
+import de.debuglevel.barcode.rest.barcode.BarcodeDTO
 import mu.KotlinLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested

@@ -1,6 +1,6 @@
 package de.debuglevel.barcode.domain.barcode
 
-import de.debuglevel.barcode.rest.greeting.BarcodeDTO
+import de.debuglevel.barcode.rest.barcode.BarcodeDTO
 import mu.KotlinLogging
 import uk.org.okapibarcode.backend.Code128
 import uk.org.okapibarcode.backend.QrCode

@@ -1,6 +1,6 @@
 package de.debuglevel.barcode.domain.barcode
 
-import de.debuglevel.barcode.rest.greeting.BarcodeDTO
+import de.debuglevel.barcode.rest.barcode.BarcodeDTO
 import mu.KotlinLogging
 import org.apache.tika.config.TikaConfig
 import org.assertj.core.api.Assertions.assertThat

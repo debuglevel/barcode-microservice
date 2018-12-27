@@ -1,6 +1,6 @@
 package de.debuglevel.barcode.rest
 
-import de.debuglevel.barcode.rest.greeting.BarcodeController
+import de.debuglevel.barcode.rest.barcode.BarcodeController
 import de.debuglevel.microservices.utils.apiversion.apiVersion
 import de.debuglevel.microservices.utils.logging.buildRequestLog
 import de.debuglevel.microservices.utils.logging.buildResponseLog

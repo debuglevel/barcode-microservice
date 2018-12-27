@@ -1,4 +1,4 @@
-package de.debuglevel.barcode.rest.greeting
+package de.debuglevel.barcode.rest.barcode
 
 import com.google.gson.Gson
 import de.debuglevel.barcode.domain.barcode.BarcodeGenerator
