@@ -39,7 +39,7 @@ class RestEndpoint {
 
                 path("/:uuid") {
                     get("", "image/svg+xml", BarcodeController.getOneSvg())
-                    //get("", "image/png", BarcodeController.getOnePng())
+                    get("", "image/png", BarcodeController.getOnePng())
                     //get("", "application/json", BarcodeController.getOneJson())
                 }
             }

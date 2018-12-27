@@ -32,6 +32,25 @@ object BarcodeController {
         }
     }
 
+    fun getOnePng(): RouteHandler.() -> Any {
+        return {
+            val uuid = params(":uuid")
+            val barcode = barcodes.getOrElse(uuid) { throw BarcodeNotFoundException(uuid) }
+
+            try {
+                val barcodeByteArray = BarcodeGenerator.generate(barcode, OutputFormat.PNG)
+
+                type(contentType = "image/png")
+                barcodeByteArray
+            } catch (e: Exception) {
+                logger.info("Barcode could not be generated: ", e.message)
+                response.type("application/json")
+                response.status(400)
+                "{\"message\":\"barcode '$uuid' could not be generated: ${e.message}\"}"
+            }
+        }
+    }
+
     fun getList(): RouteHandler.() -> String {
         return {
             type(contentType = "application/json")

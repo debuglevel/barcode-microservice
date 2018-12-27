@@ -79,6 +79,13 @@ dependencies {
     
     // Barcode
     compile group: 'uk.org.okapibarcode', name: 'okapibarcode', version: '0.1.9'
+    
+    // Batik (SVG to PNG)
+    // TODO: "-all" adds about 10MB. Could probably be stripped down by selecting the necessary packages.
+    compile group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.10'
+
+    // Apache Tika for File-Magic in tests
+    testCompile 'org.apache.tika:tika-core:1.20'
 }
 
 // jar configuration is still needed (despite of application plugin) to add Manifest to traditional jar
