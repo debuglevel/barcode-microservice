@@ -1,4 +1,4 @@
-package de.debuglevel.greeting.rest
+package de.debuglevel.barcode.rest
 
 /**
  * Application entry point.

@@ -1,4 +1,4 @@
-package de.debuglevel.greeting.rest
+package de.debuglevel.barcode.rest
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -24,7 +24,7 @@ class RestEndpointTests {
         // Arrange
 
         // Act
-        val response = ApiTestUtils.request("GET", "/greetings/test", null)
+        val response = ApiTestUtils.request("GET", "/barcodes/", null)
 
         // Assert
         // HTTP Codes begin from "100". So something from 100 and above was probably a response to a HTTP request

@@ -1,4 +1,4 @@
-package de.debuglevel.greeting.domain.greeting
+package de.debuglevel.barcode.domain.barcode
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
@@ -9,14 +9,14 @@ import java.util.stream.Stream
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class GreeterTests {
+class BarcodeGeneratorTests {
     @ParameterizedTest
     @MethodSource("validNameProvider")
     fun `greet valid names`(testData: NameTestData) {
         // Arrange
 
         // Act
-        val greeting = Greeter.greet(testData.value).greeting
+        val greeting = BarcodeGenerator.greet(testData.value).greeting
 
         //Assert
         assertThat(greeting).isEqualTo(testData.expected)
@@ -37,7 +37,7 @@ class GreeterTests {
         // Act
 
         // Assert
-        assertThatExceptionOfType(Greeter.GreetingException::class.java).isThrownBy({ Greeter.greet(testData.value) })
+        assertThatExceptionOfType(BarcodeGenerator.GreetingException::class.java).isThrownBy({ BarcodeGenerator.greet(testData.value) })
     }
 
     fun invalidNameProvider() = Stream.of(

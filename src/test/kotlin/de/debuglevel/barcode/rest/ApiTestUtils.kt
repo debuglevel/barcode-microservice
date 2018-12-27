@@ -1,4 +1,4 @@
-package de.debuglevel.greeting.rest
+package de.debuglevel.barcode.rest
 
 import spark.utils.IOUtils
 import java.io.IOException

@@ -1,4 +1,4 @@
-package de.debuglevel.greeting.rest
+package de.debuglevel.barcode.rest
 
 import com.natpryce.konfig.Key
 import com.natpryce.konfig.intType
@@ -21,7 +21,7 @@ class MainKtTest {
         Spark.awaitInitialization()
 
         // Act
-        val response = ApiTestUtils.request("GET", "/greetings/test", null)
+        val response = ApiTestUtils.request("GET", "/barcodes/", null)
 
         // Assert
         // HTTP Codes begin from "100". So something from 100 and above was probably a response to a HTTP request

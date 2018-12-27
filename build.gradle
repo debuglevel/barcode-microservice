@@ -29,12 +29,12 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-group 'de.debuglevel.greeting'
+group 'de.debuglevel.barcode'
 version '0.0.1-SNAPSHOT'
 
 // application plugin configuration
-applicationName = "Greeting Microservice"
-mainClassName = "de.debuglevel.greeting.rest.MainKt"
+applicationName = "Barcode Microservice"
+mainClassName = "de.debuglevel.barcode.rest.MainKt"
 
 sourceCompatibility = 1.8
 
@@ -76,6 +76,9 @@ dependencies {
 
     // Template Engine
     //compile 'com.sparkjava:spark-template-mustache:2.7.1'
+    
+    // Barcode
+    compile group: 'uk.org.okapibarcode', name: 'okapibarcode', version: '0.1.9'
 }
 
 // jar configuration is still needed (despite of application plugin) to add Manifest to traditional jar
