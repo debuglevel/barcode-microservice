@@ -29,10 +29,10 @@ stages:
 # traditional build with gradle and generate artifacts
 build:
   stage: build
-  image: gradle:4.10-jdk8-alpine
+  image: openjdk:8-jdk-alpine
   script:
-    - sudo apk add --no-cache ttf-dejavu
-    - gradle build
+    - apk add --no-cache ttf-dejavu
+    - ./gradlew build
   artifacts:
     paths:
     # use only shadowed jars
