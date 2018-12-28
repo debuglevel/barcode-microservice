@@ -32,7 +32,7 @@ build:
   image: gradle:4.10-jdk8-alpine
   script:
     - apk add --no-cache ttf-dejavu
-  - gradle build
+    - gradle build
   artifacts:
     paths:
     # use only shadowed jars
