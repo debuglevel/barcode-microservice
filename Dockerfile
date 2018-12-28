@@ -1,5 +1,8 @@
 ## Building stage
 FROM openjdk:8-jdk-alpine AS builder
+# install fonts on alpine, as they are not available by default and some tests (Batik SVG to PNG) will fail with a NoClassDefFoundError
+RUN apk add --no-cache ttf-dejavu
+
 WORKDIR /src/
 
 # cache gradle
