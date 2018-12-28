@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import spark.Spark.awaitInitialization
+import org.junit.jupiter.api.AfterAll
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RestEndpointTests {
@@ -19,6 +21,11 @@ class RestEndpointTests {
         restEndpoint.start(arrayOf())
 
         awaitInitialization()
+    }
+
+    @AfterAll
+    fun stopServer() {
+        SparkTestUtils.awaitShutdown()
     }
 
     @Test
