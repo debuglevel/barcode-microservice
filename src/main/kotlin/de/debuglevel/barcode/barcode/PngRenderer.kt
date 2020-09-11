@@ -42,10 +42,11 @@ class PngRenderer
         ByteArrayOutputStream().use { svgOutputStream ->
             val svgRenderer = SvgRenderer(svgOutputStream, magnification, paper, ink)
             svgRenderer.render(symbol)
+            val svgBytes = svgOutputStream.toByteArray()
 
             logger.debug { "Converting SVG to PNG..." }
             val pngTranscoder = PNGTranscoder()
-            val pngTranscoderInput = TranscoderInput(svgOutputStream.toByteArray().inputStream())
+            val pngTranscoderInput = TranscoderInput(svgBytes.inputStream())
             val pngTranscoderOutput = TranscoderOutput(outputStream)
             pngTranscoder.transcode(pngTranscoderInput, pngTranscoderOutput)
             outputStream.flush()
