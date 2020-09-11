@@ -49,7 +49,7 @@ class PngRenderer
         val pngTranscoderOutput = TranscoderOutput(outputStream)
         pngTranscoder.transcode(pngTranscoderInput, pngTranscoderOutput)
         outputStream.flush()
-        outputStream.close() // TODO: not sure this is good. As effectively an ByteArrayOutputStream is passed, this has no effect anyway
+        outputStream.close()
 
         logger.debug { "Rendered PNG barcode" }
     }
