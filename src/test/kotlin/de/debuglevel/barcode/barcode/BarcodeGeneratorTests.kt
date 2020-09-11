@@ -27,7 +27,10 @@ class BarcodeGeneratorTests {
         // Arrange
 
         // Act
-        val barcodeByteArray = barcodeGenerator.generate(Barcode(null, testData.content, testData.codeType), testData.outputformatTestdata.outputFormat)
+        val barcodeByteArray = barcodeGenerator.generate(
+            Barcode(null, testData.content, testData.barcodeType),
+            testData.outputformatTestdata.outputFormat
+        )
 
         //Assert
         val mimetype = TikaConfig().detector.detect(barcodeByteArray.inputStream(), org.apache.tika.metadata.Metadata())
@@ -50,7 +53,7 @@ class BarcodeGeneratorTests {
 
     fun validContentAndCodetypeAndOutputformatCombinationsProvider(): Stream<ContentAndCodetypeAndOutputformatTestData> {
         val contents = validContentProvider().toList()
-        val codeTypes = CodeType.values()
+        val codeTypes = BarcodeType.values()
         val outputformatTestdata = validOutputformatProvider().toList()
 
         val permutations: MutableSet<ContentAndCodetypeAndOutputformatTestData> = mutableSetOf()
@@ -75,8 +78,8 @@ class BarcodeGeneratorTests {
     )
 
     data class ContentAndCodetypeAndOutputformatTestData(
-            val content: String,
-            val codeType: CodeType,
-            val outputformatTestdata: OutputformatTestData
+        val content: String,
+        val barcodeType: BarcodeType,
+        val outputformatTestdata: OutputformatTestData
     )
 }

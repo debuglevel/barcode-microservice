@@ -11,5 +11,5 @@ data class Barcode(
     @GeneratedValue
     var id: UUID?,
     val content: String,
-    val codeType: CodeType
+    val barcodeType: BarcodeType
 )
