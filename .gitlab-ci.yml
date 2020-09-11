@@ -33,6 +33,7 @@ build:
   stage: build
   image: openjdk:8-jdk-alpine
   script:
+    - apk add --no-cache ttf-dejavu
     - ./gradlew build
   artifacts:
     paths:

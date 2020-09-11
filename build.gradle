@@ -147,6 +147,13 @@ dependencies {
 
     // Barcode
     compile "uk.org.okapibarcode:okapibarcode:$okapibarcodeVersion"
+
+    // Batik (SVG to PNG)
+    // TODO: "-all" adds about 10MB. Could probably be stripped down by selecting the necessary packages.
+    compile "org.apache.xmlgraphics:batik-all:$batikVersion"
+
+    // Apache Tika for File-Magic in tests
+    testCompile "org.apache.tika:tika-core:$tikaVersion"
 }
 
 // Java configuration

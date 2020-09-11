@@ -52,6 +52,24 @@ class BarcodeController(
         }
     }
 
+    @Get("/{id}")
+    @Produces("image/png")
+    fun getOnePng(id: UUID): HttpResponse<*> {
+        logger.debug("Called getOne($id)")
+        return try {
+            val barcode = barcodeService.get(id)
+            val barcodeByteArray = barcodeGenerator.generate(barcode, OutputFormat.PNG)
+
+            HttpResponse.ok(barcodeByteArray)
+        } catch (e: BarcodeService.EntityNotFoundException) {
+            logger.debug { "Getting barcode $id failed: ${e.message}" }
+            HttpResponse.notFound("Barcode $id does not exist.")
+        } catch (e: Exception) {
+            logger.error(e) { "Unhandled exception" }
+            HttpResponse.serverError("Unhandled exception: ${e.message}")
+        }
+    }
+
     @Post("/")
     fun postOne(addBarcodeRequest: AddBarcodeRequest): HttpResponse<*> {
         logger.debug("Called postOne($addBarcodeRequest)")
