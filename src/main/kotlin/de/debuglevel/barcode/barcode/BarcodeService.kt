@@ -10,8 +10,6 @@ class BarcodeService(
 ) {
     private val logger = KotlinLogging.logger {}
 
-    private val barcodes = hashMapOf<String, Barcode>()
-
     fun get(id: UUID): Barcode {
         logger.debug { "Getting barcode with ID '$id'..." }
 
