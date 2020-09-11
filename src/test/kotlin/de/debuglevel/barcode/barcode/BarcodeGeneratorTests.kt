@@ -29,7 +29,7 @@ class BarcodeGeneratorTests {
         // Act
         val barcodeByteArray = barcodeGenerator.generate(
             Barcode(null, testData.content, testData.barcodeType),
-            testData.outputformatTestdata.outputFormat
+            testData.outputformatTestdata.outputPictureFormat
         )
 
         //Assert
@@ -47,8 +47,8 @@ class BarcodeGeneratorTests {
     )
 
     fun validOutputformatProvider() = Stream.of(
-            OutputformatTestData(outputFormat = OutputFormat.SVG, mimetype = "image/svg+xml"),
-            OutputformatTestData(outputFormat = OutputFormat.PNG, mimetype = "image/png")
+        OutputformatTestData(outputPictureFormat = OutputPictureFormat.SVG, mimetype = "image/svg+xml"),
+        OutputformatTestData(outputPictureFormat = OutputPictureFormat.PNG, mimetype = "image/png")
     )
 
     fun validContentAndCodetypeAndOutputformatCombinationsProvider(): Stream<ContentAndCodetypeAndOutputformatTestData> {
@@ -73,8 +73,8 @@ class BarcodeGeneratorTests {
     )
 
     data class OutputformatTestData(
-            val outputFormat: OutputFormat,
-            val mimetype: String
+        val outputPictureFormat: OutputPictureFormat,
+        val mimetype: String
     )
 
     data class ContentAndCodetypeAndOutputformatTestData(

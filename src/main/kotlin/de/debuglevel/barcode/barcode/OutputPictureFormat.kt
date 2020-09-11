@@ -1,6 +1,6 @@
 package de.debuglevel.barcode.barcode
 
-enum class OutputFormat {
+enum class OutputPictureFormat {
     SVG,
     PNG,
 }
