@@ -1,4 +1,4 @@
-package de.debuglevel.barcode.domain.barcode
+package de.debuglevel.barcode.barcode
 
 enum class CodeType {
     Code128,

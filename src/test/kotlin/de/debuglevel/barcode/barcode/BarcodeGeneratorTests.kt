@@ -1,33 +1,40 @@
-package de.debuglevel.barcode.domain.barcode
+package de.debuglevel.barcode.barcode
 
-import de.debuglevel.barcode.rest.greeting.BarcodeDTO
+import io.micronaut.test.annotation.MicronautTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+import javax.inject.Inject
 
 
+@MicronautTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BarcodeGeneratorTests {
+
+    @Inject
+    lateinit var barcodeGenerator: BarcodeGenerator
+
     @ParameterizedTest
     @MethodSource("validContentProvider")
     fun `generate valid barcodes`(testData: ContentTestData) {
         // Arrange
 
         // Act
-        val barcodeByteArray = BarcodeGenerator.generate(BarcodeDTO(null, testData.value, CodeType.Code128), OutputFormat.SVG)
+        val barcodeByteArray =
+            barcodeGenerator.generate(Barcode(null, testData.value, CodeType.Code128), OutputFormat.SVG)
 
         //Assert
-        assertThat(barcodeByteArray).isNotEmpty()
-        assertThat(barcodeByteArray).isNotNull()
+        assertThat(barcodeByteArray).isNotEmpty
+        assertThat(barcodeByteArray).isNotNull
     }
 
     fun validContentProvider() = Stream.of(
-            ContentTestData(value = "Mozart"),
-            ContentTestData(value = "Amadeus"),
-            ContentTestData(value = "Hänschen"),
-            ContentTestData(value = "Max Mustermann")
+        ContentTestData(value = "Mozart"),
+        ContentTestData(value = "Amadeus"),
+        ContentTestData(value = "Hänschen"),
+        ContentTestData(value = "Max Mustermann")
     )
 
 //    @ParameterizedTest
@@ -47,6 +54,6 @@ class BarcodeGeneratorTests {
 //    )
 
     data class ContentTestData(
-            val value: String
+        val value: String
     )
 }
