@@ -1,4 +1,4 @@
-package de.debuglevel.greeter
+package de.debuglevel.barcode
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.Micronaut
