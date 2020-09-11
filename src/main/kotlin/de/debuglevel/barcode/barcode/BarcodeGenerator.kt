@@ -33,7 +33,6 @@ class BarcodeGenerator {
         return when (barcode.codeType) {
             CodeType.Code128 -> Code128()
             CodeType.QrCode -> QrCode()
-            else -> throw UnsupportedCodeTypeException(barcode.codeType)
         }
     }
 
@@ -44,12 +43,6 @@ class BarcodeGenerator {
         return when (outputFormat) {
             OutputFormat.SVG -> SvgRenderer(outputStream, 1.0, Color.WHITE, Color.BLACK)
             OutputFormat.PNG -> PngRenderer(outputStream, 4.0, Color.WHITE, Color.BLACK)
-            else -> throw UnsupportedOutputFormat(outputFormat)
         }
     }
-
-    class UnsupportedOutputFormat(outputFormat: OutputFormat) :
-        Exception("Output format '$outputFormat' is not supported.")
-
-    class UnsupportedCodeTypeException(codeType: CodeType) : Exception("Code of type '$codeType' is not supported.")
 }
