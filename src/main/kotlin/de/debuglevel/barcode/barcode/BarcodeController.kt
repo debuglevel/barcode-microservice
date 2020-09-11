@@ -1,9 +1,12 @@
 package de.debuglevel.barcode.barcode
 
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
+import io.micronaut.http.server.util.HttpHostResolver
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
+import io.micronaut.web.router.RouteBuilder
 import io.swagger.v3.oas.annotations.tags.Tag
 import mu.KotlinLogging
 import java.util.*
@@ -14,6 +17,8 @@ import java.util.*
 class BarcodeController(
     private val barcodeService: BarcodeService,
     private val barcodeGenerator: BarcodeGenerator,
+    private val httpHostResolver: HttpHostResolver,
+    private val uriNamingStrategy: RouteBuilder.UriNamingStrategy,
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -71,14 +76,18 @@ class BarcodeController(
     }
 
     @Post("/")
-    fun postOne(addBarcodeRequest: AddBarcodeRequest): HttpResponse<*> {
+    fun postOne(addBarcodeRequest: AddBarcodeRequest, httpRequest: HttpRequest<AddBarcodeRequest>): HttpResponse<*> {
         logger.debug("Called postOne($addBarcodeRequest)")
 
         return try {
             val barcode = addBarcodeRequest.toBarcode()
             val addedBarcode = barcodeService.add(barcode)
 
-            val addBarcodeResponse = AddBarcodeResponse(addedBarcode)
+            val serverUrl = httpHostResolver.resolve(httpRequest)
+            val controllerPart = uriNamingStrategy.resolveUri(BarcodeController::class.java)
+            val selfUrl = "$serverUrl$controllerPart/${addedBarcode.id}"
+
+            val addBarcodeResponse = AddBarcodeResponse(addedBarcode, selfUrl)
             HttpResponse.created(addBarcodeResponse)
         } catch (e: Exception) {
             logger.error(e) { "Unhandled exception" }
