@@ -31,21 +31,6 @@ class BarcodeService(
         return savedBarcode
     }
 
-//    fun update(id: UUID, barcode: Barcode): Barcode {
-//        logger.debug { "Updating barcode '$barcode' with ID '$id'..." }
-//
-//        // an object must be known to Hibernate (i.e. retrieved first) to get updated;
-//        // it would be a "detached entity" otherwise.
-//        val updateBarcode = this.get(id).apply {
-//            name = barcode.name
-//        }
-//
-//        val updatedBarcode = barcodeRepository.update(updateBarcode)
-//
-//        logger.debug { "Updated barcode: $updatedBarcode with ID '$id'" }
-//        return updatedBarcode
-//    }
-
     fun list(): Set<Barcode> {
         logger.debug { "Getting all barcodes ..." }
 
