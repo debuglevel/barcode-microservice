@@ -39,17 +39,18 @@ class PngRenderer
         logger.debug { "Rendering PNG barcode..." }
 
         logger.debug { "Rendering intermediate SVG barcode..." }
-        val svgOutputStream = ByteArrayOutputStream()
-        val svgRenderer = SvgRenderer(svgOutputStream, magnification, paper, ink)
-        svgRenderer.render(symbol)
+        ByteArrayOutputStream().use { svgOutputStream ->
+            val svgRenderer = SvgRenderer(svgOutputStream, magnification, paper, ink)
+            svgRenderer.render(symbol)
 
-        logger.debug { "Converting SVG to PNG..." }
-        val pngTranscoder = PNGTranscoder()
-        val pngTranscoderInput = TranscoderInput(svgOutputStream.toByteArray().inputStream())
-        val pngTranscoderOutput = TranscoderOutput(outputStream)
-        pngTranscoder.transcode(pngTranscoderInput, pngTranscoderOutput)
-        outputStream.flush()
-        outputStream.close()
+            logger.debug { "Converting SVG to PNG..." }
+            val pngTranscoder = PNGTranscoder()
+            val pngTranscoderInput = TranscoderInput(svgOutputStream.toByteArray().inputStream())
+            val pngTranscoderOutput = TranscoderOutput(outputStream)
+            pngTranscoder.transcode(pngTranscoderInput, pngTranscoderOutput)
+            outputStream.flush()
+            outputStream.close()
+        }
 
         logger.debug { "Rendered PNG barcode" }
     }
