@@ -46,7 +46,7 @@ class BarcodeController(
         logger.debug("Called getOne($id)")
         return try {
             val barcode = barcodeService.get(id)
-            val barcodeByteArray = barcodeGenerator.generate(barcode, OutputFormat.SVG)
+            val barcodeByteArray = barcodeGenerator.generate(barcode, OutputPictureFormat.SVG)
 
             HttpResponse.ok(barcodeByteArray)
         } catch (e: BarcodeService.EntityNotFoundException) {
@@ -64,7 +64,7 @@ class BarcodeController(
         logger.debug("Called getOne($id)")
         return try {
             val barcode = barcodeService.get(id)
-            val barcodeByteArray = barcodeGenerator.generate(barcode, OutputFormat.PNG)
+            val barcodeByteArray = barcodeGenerator.generate(barcode, OutputPictureFormat.PNG)
 
             HttpResponse.ok(barcodeByteArray)
         } catch (e: BarcodeService.EntityNotFoundException) {
