@@ -1,5 +1,6 @@
 package de.debuglevel.barcode.barcode
 
+import de.debuglevel.barcode.Application
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
@@ -84,8 +85,14 @@ class BarcodeController(
             val addedBarcode = barcodeService.add(barcode)
 
             val serverUrl = httpHostResolver.resolve(httpRequest)
-            val controllerPart = uriNamingStrategy.resolveUri(BarcodeController::class.java)
-            val selfUrl = "$serverUrl$controllerPart/${addedBarcode.id}"
+
+            // get path of this Controller
+            val applicationContext = Application.applicationContext
+            val beanDefinition = applicationContext.getBeanDefinition(this::class.java)
+            val annotationValue = beanDefinition.getAnnotation(Controller::class.java)!!
+            val controllerPath = annotationValue.get("value", String::class.java).get()
+
+            val selfUrl = "$serverUrl$controllerPath/${addedBarcode.id}"
 
             val addBarcodeResponse = AddBarcodeResponse(addedBarcode, selfUrl)
             HttpResponse.created(addBarcodeResponse)
